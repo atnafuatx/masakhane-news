@@ -9,35 +9,35 @@
 #SBATCH --output=/home/mila/b/bonaventure.dossou/masakhane-news/comOutputXLMRBase.txt
 
 ###########cluster information above this line
-module load python/3.9 cuda/10.2/cudnn/7.6
-source /home/mila/b/bonaventure.dossou/afrispeech/bin/activate
-pip install -r requirements.txt
-export PYTHONPATH=$PYTHONPATH:~/masakhane-news
+# module load python/3.9 cuda/10.2/cudnn/7.6
+# source /home/mila/b/bonaventure.dossou/afrispeech/bin/activate
+# pip install -r requirements.txt
+# export PYTHONPATH=$PYTHONPATH:~/masakhane-news
 export MAX_LENGTH=164
-export BATCH_SIZE=64
+export BATCH_SIZE=32
 export NUM_EPOCHS=10
-export SAVE_STEPS=1500
+export SAVE_STEPS=5000
 
-for model in xlm-roberta-base xlm-roberta-large google/rembert microsoft/deberta-v3-base
+for model in bonadossou/afrolm_active_learning  castorini/afriberta_large castorini/afriberta_base castorini/afriberta_small
 do
 	export BERT_MODEL=${model}
 	for lang in amh eng fra hau ibo lin pcm run swa yor
 	do
-		export OUTPUT_DIR=/home/mila/b/bonaventure.dossou/masakhane-news/results/${lang}_${model}
-		export DATA_DIR=/home/mila/b/bonaventure.dossou/masakhane-news/data/${lang}
+		# export OUTPUT_DIR=/content/drive/MyDrive/masakhane-news/results/${lang}_${model}
+		export DATA_DIR=/content/masakhane-news/data/${lang}
 		export LABELS_FILE=${DATA_DIR}/labels.txt
 		export LANG=${lang}
-		export OUTPUT_DIR=/home/mila/b/bonaventure.dossou/masakhane-news/results/${lang}_${model}
+		export OUTPUT_DIR=/content/drive/MyDrive/MasakaneNews/results/${lang}/${model}
 		for seed in 1 2 3 4 5
 		do
 			for header_style in 0 1
 			do
 				export HEADER_STYLE=${header_style}
 				export SEED=${seed}
-				export OUTPUT_FILE=/home/mila/b/bonaventure.dossou/masakhane-news/results/test_result_${lang}_${seed}_${header_style}
-				export OUTPUT_PREDICTION=/home/mila/b/bonaventure.dossou/masakhane-news/results/test_predictions_${lang}_${seed}_${header_style}
+				export OUTPUT_FILE=/content/drive/MyDrive/MasakaneNews/results/${lang}/${model}/test_result_${seed}_${header_style}
+				export OUTPUT_PREDICTION=/content/drive/MyDrive/MasakaneNews/results/${lang}/${model}/test_predictions_${seed}_${header_style}
 
-				CUDA_VISIBLE_DEVICES=2 python train_textclass.py --data_dir $DATA_DIR \
+				CUDA_VISIBLE_DEVICES=0 python code/train_textclass.py --data_dir $DATA_DIR \
 				--model_type xlmroberta \
 				--model_name_or_path $BERT_MODEL \
 				--output_dir $OUTPUT_DIR \
