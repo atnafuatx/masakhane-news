@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 business
 health
 politics
 sports
-=======
-business
-health
-politics
-sports
->>>>>>> b23a1fb87f7ef6f9da27a6a44c24959ce44aee64
