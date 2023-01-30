@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-entertainment
-health
-politics
-sports
-=======
 entertainment
 health
 politics
 sports
 technology
->>>>>>> b23a1fb87f7ef6f9da27a6a44c24959ce44aee64
