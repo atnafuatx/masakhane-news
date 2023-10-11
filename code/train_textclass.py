@@ -642,16 +642,16 @@ def main():
 
         output_test_predictions_file = os.path.join(args.output_dir, args.output_prediction_file+".txt")
         with open(output_test_predictions_file, "w", encoding='utf-8') as writer:
-            test_path = os.path.join(args.data_dir, "test.tsv")
+            test_path = os.path.join(args.data_dir, "test.csv")
             test_set = pd.read_csv(test_path, delimiter = "\t")
             
             texts = test_set['text'].values
             labels = test_set['category'].values
-            headlines  = test_set['headline'].values
+            # headlines  = test_set['headline'].values
 
-            for idx, (text_, headline_, label_) in enumerate(zip(texts, headlines, labels)):
+            for idx, (text_, label_) in enumerate(zip(texts, labels)):
                 if int(args.header) == 1:
-                    text_ = headline_.strip() + ". " + text_.strip()
+                    text_ = text_.strip()
                 output_line = text_ + "\t" + id2label[str(predictions[idx])] + "\n"
                 writer.write(output_line)
 

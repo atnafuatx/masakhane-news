@@ -23,22 +23,44 @@ class InputFeatures(object):
         self.token_type_ids = token_type_ids
         self.label = label
 
+# def read_instances_from_file(args, data_dir, mode, delimiter=","):
+#     file_path = os.path.join(data_dir, "{}.csv".format(mode))
+#     instances = []
+
+#     line_data  = pd.read_csv(file_path, sep=delimiter)
+
+#     texts = line_data['text'].values
+#     labels = line_data['category'].values
+#     # headlines  = line_data['headline'].values
+
+#     for text_, label_ in zip(texts, labels):
+#         if int(args.header) == 1:
+#             text_ = text_.strip()
+#         instances.append(Instance(text_, label_))
+
+#     return instances
 def read_instances_from_file(args, data_dir, mode, delimiter="\t"):
-    file_path = os.path.join(data_dir, "{}.tsv".format(mode))
+    file_path = os.path.join(data_dir, "{}.csv".format(mode))
     instances = []
 
     line_data  = pd.read_csv(file_path, sep=delimiter)
 
     texts = line_data['text'].values
     labels = line_data['category'].values
-    headlines  = line_data['headline'].values
+    # headlines  = line_data['headline'].values
 
-    for text_, headline_, label_ in zip(texts, headlines, labels):
+    for text_, label_ in zip(texts, labels):
+        # Check if any value is nan and skip if it is
+        if pd.isnull(text_) or pd.isnull(label_):
+            logger.warning("Skipping instance due to NaN value.")
+            continue
+
         if int(args.header) == 1:
-            text_ = headline_.strip() + ". " + text_.strip()
+            text_ = text_.strip()
         instances.append(Instance(text_, label_))
 
     return instances
+
 
 def convert_instances_to_features_and_labels(instances, tokenizer, labels, max_seq_length):
     label_map = {label: i for i, label in enumerate(labels)}
@@ -83,4 +105,4 @@ def get_labels(path):
             labels = f.read().splitlines()
         return labels
     else:
-        return ['sports', 'health', 'technology', 'business', 'politics', 'entertainment', 'religion', 'uncategorized']
+        return ['sports', 'health', 'technology', 'business', 'politics', 'localnews', 'globalnews','entertainment', 'religion', 'uncategorized']
